@@ -35,7 +35,7 @@ US_validadte=US %>% filter(date_p<="2020-12-31" & date_p>="2020-12-01")
 US_test_1d=US %>% filter(date_p=="2020-11-01" )
 US_test_1w=US %>% filter(date_p<="2020-11-07" & date_p>="2020-11-01")
 US_test_1m=US %>% filter(date_p<="2020-11-30" & date_p>="2020-11-01")
-US_train=US %>% filter(date_p<="2020-11-01")
+US_train=US %>% filter(date_p<"2020-11-01")
 
 save(US,US_validadte,US_test_1d,US_test_1w,US_test_1m,US_train
      ,file="./Stone Age Covid project/data/data_set_US.rdata")
