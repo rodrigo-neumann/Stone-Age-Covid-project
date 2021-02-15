@@ -24,10 +24,10 @@ setdiff(US %>% names(),states %>% names())
 US=US[order(US$date),]
                                                 
 US$date_p<-as.character(US$date)  %>% as.Date(format="%Y%m%d")
-US$day=format(US$date_p,"%d") 
-US$month=format(US$date_p,"%m") 
-US$year=format(US$date_p,"%Y") 
-US$week=format(US$date_p,"%V")
+# US$day=format(US$date_p,"%d")
+# US$month=format(US$date_p,"%m")
+# US$year=format(US$date_p,"%Y")
+# US$week=format(US$date_p,"%V")
 US$d_w=weekdays(US$date_p)
 
 #US=US %>% filter(states==56) 
@@ -49,30 +49,38 @@ US=US %>% filter(!deathIncrease_next %>% is.na())
 
 US<-US %>% select(setdiff(names(US),c("date","dateChecked","lastModified","recovered","total","posNeg","hash")))
 
-US_validadte=US %>% filter(date_p<="2020-12-31" & date_p>="2020-12-01")
+US[is.na(US)]<-0
+US=US %>% fastDummies::dummy_cols(remove_selected_columns = T)
+US$date_n= as.numeric(US$date_p-min(US$date_p),"days")
+
+
+
+
+US_validate=US %>% filter(date_p<="2020-12-31" & date_p>="2020-12-01")
 # US_test_1d=US %>% filter(date_p=="2020-11-01" )
 # US_test_1w=US %>% filter(date_p<="2020-11-07" & date_p>="2020-11-01")
 # US_test_1m=US %>% filter(date_p<="2020-11-30" & date_p>="2020-11-01")
-US_train=US %>% filter(date_p<"2020-11-30")
+US_train=US %>% filter(date_p<="2020-11-30")
+
+US_validate=US_validate %>% select(setdiff(names(US),c("date_p")))
+US_train=US_train %>% select(setdiff(names(US),c("date_p")))
 
 
 
-
-
-save(US,US_validadte,US_train
+save(US,US_validate,US_train
      ,file="./Stone Age Covid project/data/data_set_US.rdata")
 
 
 ggplot() +
-  geom_line(aes(x=US$date_p, y=US$death))
+  geom_line(aes(x=US$date_n, y=US$death))
 
 ggplot() +
-  geom_line(aes(x=US$date_p, y=US$deathIncrease))
+  geom_line(aes(x=US$date_n, y=US$deathIncrease))
 
-ggplot(data=US,aes(x=d_w, y=deathIncrease, group=week)) +
-  geom_line(aes(color=week)) #  sasonalidade forte semanal
-
-ggplot(data=US,aes(x=day, y=deathIncrease, group=month)) +
-  geom_line(aes(color=month)) # nem tanto no mes
+# ggplot(data=US,aes(x=d_w, y=deathIncrease, group=week)) +
+#   geom_line(aes(color=week)) #  sasonalidade forte semanal
+# 
+# ggplot(data=US,aes(x=day, y=deathIncrease, group=month)) +
+#   geom_line(aes(color=month)) # nem tanto no mes
 
 
