@@ -44,21 +44,21 @@ death_increase_next_day<- function (line,df)
   return(next_day$deathIncrease)
 }
 
-avg_death_increase_last_7<- function (line,df) 
+same_day_last_week<- function (line,df) 
 {
   #print(line["date_p"])
-  last_7_day=filter(df,date_p>=as.Date(line["date_p"])-days(6) & date_p<=as.Date(line["date_p"]) )
+  last_7_day=filter(df,date_p==as.Date(line["date_p"])-days(7))
   #print(nrow(last_7_day))
   if (nrow(last_7_day)==0)
   {return(NA)}
-  return(mean(last_7_day$deathIncrease))
+  return(last_7_day$deathIncrease)
 }
 
 
 
 
 US$deathIncrease_next=apply(X=US,MARGIN = 1,FUN = death_increase_next_day,df=US)
-US$avg_death_inc_last_7=apply(X=US,MARGIN = 1,FUN = avg_death_increase_last_7,df=US)
+US$same_day_last_week=apply(X=US,MARGIN = 1,FUN = same_day_last_week,df=US)
 
 
 US=US %>% filter(!deathIncrease_next %>% is.na())
@@ -74,7 +74,7 @@ US<-US %>% select(setdiff(names(US),c("date","dateChecked","lastModified","recov
 US[is.na(US)]<-0
 US=US %>% fastDummies::dummy_cols(remove_selected_columns = T)
 US$date_n= as.numeric(US$date_p-min(US$date_p),"days")
-
+US$date_n2=US$date_n-260
 
 
 US_validate=US %>% filter(date_p<="2020-12-31" & date_p>="2020-12-01")
@@ -83,6 +83,7 @@ US_validate=US %>% filter(date_p<="2020-12-31" & date_p>="2020-12-01")
 # US_test_1m=US %>% filter(date_p<="2020-11-30" & date_p>="2020-11-01")
 US_train=US %>% filter(date_p<="2020-11-30")
 
+US=US %>% select(setdiff(names(US),c("date_p")))
 US_validate=US_validate %>% select(setdiff(names(US),c("date_p")))
 US_train=US_train %>% select(setdiff(names(US),c("date_p")))
 
@@ -104,4 +105,19 @@ ggplot() +
 # ggplot(data=US,aes(x=day, y=deathIncrease, group=month)) +
 #   geom_line(aes(color=month)) # nem tanto no mes
 
+US_train$date_n %>% max()
 
+US$deathIncrease_increase= US$deathIncrease_next-US$deathIncrease
+
+US<-US %>% select(setdiff(names(US),c("date","dateChecked","lastModified","recovered","total","posNeg","hash"
+                                      ,"negative","hospitalizedCumulative","inIcuCumulative","death","hospitalized"
+                                      ,"totalTestResults","totalTestResultsIncrease","positive","onVentilatorCumulative"
+                                      ,"hospitalizedCurrently","deathIncrease_next")))
+
+
+US_train=US %>% filter(date_n<260)
+US_validate=US %>% filter(date_n>=260 & date_n<=290)
+
+
+save(US,US_validate,US_train
+     ,file="./Stone Age Covid project/data/data_set_US_step.rdata")
