@@ -44,15 +44,36 @@ death_increase_next_day<- function (line,df)
   return(next_day$deathIncrease)
 }
 
- US$deathIncrease_next=apply(X=US,MARGIN = 1,FUN = death_increase_next_day,df=US)
+avg_death_increase_last_7<- function (line,df) 
+{
+  #print(line["date_p"])
+  last_7_day=filter(df,date_p>=as.Date(line["date_p"])-days(6) & date_p<=as.Date(line["date_p"]) )
+  #print(nrow(last_7_day))
+  if (nrow(last_7_day)==0)
+  {return(NA)}
+  return(mean(last_7_day$deathIncrease))
+}
+
+
+
+
+US$deathIncrease_next=apply(X=US,MARGIN = 1,FUN = death_increase_next_day,df=US)
+US$avg_death_inc_last_7=apply(X=US,MARGIN = 1,FUN = avg_death_increase_last_7,df=US)
+
+
 US=US %>% filter(!deathIncrease_next %>% is.na())
 
-US<-US %>% select(setdiff(names(US),c("date","dateChecked","lastModified","recovered","total","posNeg","hash")))
+#US<-US %>% select(setdiff(names(US),c("date","dateChecked","lastModified","recovered","total","posNeg","hash")))
+
+US<-US %>% select(setdiff(names(US),c("date","dateChecked","lastModified","recovered","total","posNeg","hash"
+                                      ,"negative","hospitalizedCumulative","inIcuCumulative","death","hospitalized"
+                                      ,"totalTestResults","totalTestResultsIncrease","positive","onVentilatorCumulative"
+                                      ,"hospitalizedCurrently")))
+
 
 US[is.na(US)]<-0
 US=US %>% fastDummies::dummy_cols(remove_selected_columns = T)
 US$date_n= as.numeric(US$date_p-min(US$date_p),"days")
-
 
 
 
