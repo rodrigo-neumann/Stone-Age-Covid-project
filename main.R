@@ -2,11 +2,13 @@
 #install.packages("forecast")
 #install.packages("ggplot2")
 #install.packages("caret")
+#install.packages("lubridate")
 
 require(dplyr)
 require("forecast")
 require(ggplot2)
 require(caret)
+require(lubridate)
 
 #----------------------Updates data directily from API--------------------------
 #source("./Stone Age Covid project/data_extraction.R")
