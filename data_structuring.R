@@ -121,3 +121,5 @@ US_validate=US %>% filter(date_n>=260 & date_n<=290)
 
 save(US,US_validate,US_train
      ,file="./Stone Age Covid project/data/data_set_US_step.rdata")
+
+rm(list=ls())

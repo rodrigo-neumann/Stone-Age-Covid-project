@@ -22,3 +22,5 @@ raw_data <- GET(url_call,body=NULL,encode = "json")
 data_set_state_raw<-httr::content(raw_data)
 
 write.csv(data_set_state_raw,"./Stone Age Covid project/data/raw_state_data.csv",row.names = F)
+
+rm(list=ls())
