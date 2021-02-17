@@ -35,8 +35,9 @@ predictions_train=data_frame(date=time_train,deathincrease_model=predict_death_i
 comp_train=select(US_train,date,deathIncrease_real=deathIncrease)
 comp_train=comp_train %>% left_join(predictions_train,by=c("date"="date"))
 #- Side by side results
-ggplot()+geom_line(aes(x=comp_train$date,y=comp_train$deathincrease_model,color="model"))+
-  geom_line(aes(x=comp_train$date,y=comp_train$deathIncrease_real,color="real"))
+ggplot()+geom_line(aes(x=comp_train$date,y=comp_train$deathincrease_model,color="model"),size=1)+
+  geom_line(aes(x=comp_train$date,y=comp_train$deathIncrease_real,color="real"),size=1)+
+  labs(title="Traino",x="Data", y = "Numero de mortes")
 
 #- Absolute Error
 ggplot()+geom_line(aes(x=comp_train$date,y=abs(comp_train$deathincrease_model-comp_train$deathIncrease_real),color="model"))
@@ -47,15 +48,16 @@ mean(abs(comp_train$deathincrease_model-comp_train$deathIncrease_real),na.rm = T
 # Relative error
 ggplot()+geom_line(aes(x=comp_train$date,y=abs((comp_train$deathincrease_model-comp_train$deathIncrease_real)/comp_train$deathIncrease_real),color="model"))
 
-print("MRE VAlidation")
+print("MRE Train")
 mean(abs(comp_train$deathincrease_model-comp_train$deathIncrease_real)/comp_train$deathIncrease_real,na.rm = T)
 
 #- RMSE
 print("RMSE Train")
 RMSE(comp_train$deathIncrease_real,comp_train$deathincrease_model, na.rm = T)
 # R2
-ggplot()+geom_line(aes(x=comp_train$deathIncrease_real,y=comp_train$deathIncrease_real,color="real"))+
-  geom_point(aes(x=comp_train$deathIncrease_real,y=comp_train$deathincrease_model,color="model"))
+ggplot()+geom_line(aes(x=comp_train$deathIncrease_real,y=comp_train$deathIncrease_real,color="real"),size=1.5)+
+  geom_point(aes(x=comp_train$deathIncrease_real,y=comp_train$deathincrease_model,color="model"),size=1.5)+
+  labs(title=paste("R2=",R2(comp_train$deathIncrease_real,comp_train$deathincrease_model, na.rm = T)),x="", y = "")
 
 print("R^2 Train")
 R2(comp_train$deathIncrease_real,comp_train$deathincrease_model, na.rm = T)
