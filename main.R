@@ -1,8 +1,11 @@
-#install.packages(dplyr)
-#install.packages("forecast")
-#install.packages("ggplot2")
-#install.packages("caret")
-#install.packages("lubridate")
+# install.packages(dplyr)
+# install.packages("forecast")
+# install.packages("ggplot2")
+# install.packages("caret")
+# install.packages("lubridate")
+# install.packages("httr")
+# install.packages("readr")
+
 
 require(dplyr)
 require("forecast")
