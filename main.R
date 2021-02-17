@@ -108,8 +108,6 @@ ggplot()+
 ggplot()+
   geom_line(aes(x=comp_validation$date,y=abs((comp_validation$deathincrease_model-comp_validation$deathIncrease_real)/comp_validation$deathIncrease_real),color="validation"))+
   geom_line(aes(x=comp_train$date,y=abs((comp_train$deathincrease_model-comp_train$deathIncrease_real)/comp_train$deathIncrease_real),color="train"))
-
-
 # R2
 ggplot()+geom_line(aes(x=comp_validation$deathIncrease_real,y=comp_validation$deathIncrease_real,color="real"))+
   geom_point(aes(x=comp_validation$deathIncrease_real,y=comp_validation$deathincrease_model,color="Validation"))+
