@@ -40,7 +40,12 @@ ggplot()+geom_line(aes(x=comp_train$date,y=comp_train$deathincrease_model,color=
 
 #- Absolute Error
 ggplot()+geom_line(aes(x=comp_train$date,y=abs(comp_train$deathincrease_model-comp_train$deathIncrease_real),color="model"))
+
+print("MAE train")
+mean(abs(comp_train$deathincrease_model-comp_train$deathIncrease_real),na.rm = T)
+
 #- RMSE
+print("RMSE Train")
 RMSE(comp_train$deathIncrease_real,comp_train$deathincrease_model, na.rm = T)
 #------------------------Fit in Validation data-----------------------------------
 predict_death_increase_validation=(predict(model_sqrt,US_validate))^2
@@ -59,9 +64,11 @@ ggplot()+geom_line(aes(x=comp_validation$date,y=comp_validation$deathincrease_mo
 #- Absolute Error
 ggplot()+geom_line(aes(x=comp_validation$date,y=abs(comp_validation$deathincrease_model-comp_validation$deathIncrease_real),color="model"))
 
+print("MAE VAlidation")
 mean(abs(comp_validation$deathincrease_model-comp_validation$deathIncrease_real),na.rm = T)
 
 #- RMSE
+print("RMSE VAlidation")
 RMSE(comp_validation$deathIncrease_real,comp_validation$deathincrease_model, na.rm = T)
 #------------------------All data put together-----------------------------------
 ggplot()+geom_line(aes(x=comp_validation$date,y=comp_validation$deathincrease_model,color="model"))+
@@ -75,4 +82,4 @@ ggplot()+
   geom_line(aes(x=comp_validation$date,y=abs(comp_validation$deathincrease_model-comp_validation$deathIncrease_real),color="model"))
 
 
-2020-03-16
+
