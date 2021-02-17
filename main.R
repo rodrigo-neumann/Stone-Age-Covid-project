@@ -95,15 +95,16 @@ ggplot()+geom_line(aes(x=comp_validation$deathIncrease_real,y=comp_validation$de
 print("R^2 Validation")
 R2(comp_validation$deathIncrease_real,comp_validation$deathincrease_model, na.rm = T)
 #------------------------All data put together-----------------------------------
-ggplot()+geom_line(aes(x=comp_validation$date,y=comp_validation$deathincrease_model,color="model"))+
-  geom_line(aes(x=comp_validation$date,y=comp_validation$deathIncrease_real,color="real"))+
-  geom_line(aes(x=comp_train$date,y=comp_train$deathincrease_model,color="model"))+
-  geom_line(aes(x=comp_train$date,y=comp_train$deathIncrease_real,color="real"))+
-  geom_vline(xintercept = as.Date("2020-12-01"))
+ggplot()+geom_line(aes(x=comp_validation$date,y=comp_validation$deathincrease_model,color="model"),size=1.5)+
+  geom_line(aes(x=comp_validation$date,y=comp_validation$deathIncrease_real,color="real"),size=1.5)+
+  geom_line(aes(x=comp_train$date,y=comp_train$deathincrease_model,color="model"),size=1.5)+
+  geom_line(aes(x=comp_train$date,y=comp_train$deathIncrease_real,color="real"),size=1.5)+
+  geom_vline(xintercept = as.Date("2020-12-01"))+
+  labs(title="Varaivel resposta",x="Data", y = "Numero de mortes")
 #- Abusulote error
 ggplot()+
-  geom_line(aes(x=comp_train$date,y=abs(comp_train$deathincrease_model-comp_train$deathIncrease_real),color="model"))+
-  geom_line(aes(x=comp_validation$date,y=abs(comp_validation$deathincrease_model-comp_validation$deathIncrease_real),color="model"))
+  geom_line(aes(x=comp_train$date,y=abs(comp_train$deathincrease_model-comp_train$deathIncrease_real),color="model"),size=1.5)+
+  geom_line(aes(x=comp_validation$date,y=abs(comp_validation$deathincrease_model-comp_validation$deathIncrease_real),color="model"),size=1.5)
 # Relative error
 ggplot()+
   geom_line(aes(x=comp_validation$date,y=abs((comp_validation$deathincrease_model-comp_validation$deathIncrease_real)/comp_validation$deathIncrease_real),color="validation"))+

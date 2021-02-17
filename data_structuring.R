@@ -63,7 +63,8 @@ US$same_day_last_week=apply(X=US,MARGIN = 1,FUN = same_day_last_week,df=US)
 
 US=US %>% filter(!deathIncrease_next %>% is.na())
 
-#US<-US %>% select(setdiff(names(US),c("date","dateChecked","lastModified","recovered","total","posNeg","hash")))
+
+
 
 US<-US %>% select(setdiff(names(US),c("date","dateChecked","lastModified","recovered","total","posNeg","hash"
                                       ,"negative","hospitalizedCumulative","inIcuCumulative","death","hospitalized"

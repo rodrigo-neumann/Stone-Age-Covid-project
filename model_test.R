@@ -11,11 +11,11 @@ require(caret)
 
 load("./Stone Age Covid project/data/data_set_US.rdata")
 
-STLdecomp=US_train$deathIncrease_next %>% ts(frequency = 7) %>%
+STLdecomp=US$deathIncrease_next %>% ts(frequency = 7) %>%
   stl(t.window=31,
       s.window=7, robust=TRUE) 
 
-STLdecomp %>% autoplot()
+STLdecomp %>% autoplot()+ labs(title="STL decomposition")
 seasonal=STLdecomp %>% seasonal()
 trned=STLdecomp %>% trendcycle()
 rest=STLdecomp %>% remainder()
