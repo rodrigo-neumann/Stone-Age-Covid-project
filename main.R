@@ -24,7 +24,7 @@ require(lubridate)
 load("./Stone Age Covid project/data/data_set_US.rdata")
 #-----------------------trained Model-------------------------------------------
 load("./Stone Age Covid project/models/sqrt_model_1.rdata")
-
+importance=varImp(model_sqrt)$importance
 #------------------------Fit in training data-----------------------------------
 predict_death_increase_train=(predict(model_sqrt,US_train))^2
 time_train=as.Date("2020-03-16")+days(US_train$date_n+1)
@@ -61,6 +61,9 @@ ggplot()+geom_line(aes(x=comp_train$deathIncrease_real,y=comp_train$deathIncreas
 
 print("R^2 Train")
 R2(comp_train$deathIncrease_real,comp_train$deathincrease_model, na.rm = T)
+#Distribution
+hist(comp_train$deathIncrease_real-comp_train$deathincrease_model, na.rm = T)
+sd(comp_train$deathIncrease_real-comp_train$deathincrease_model, na.rm = T)
 #------------------------Fit in Validation data-----------------------------------
 predict_death_increase_validation=(predict(model_sqrt,US_validate))^2
 
@@ -72,8 +75,9 @@ predictions_validation=data_frame(date=time_validation,deathincrease_model=predi
 comp_validation=select(US_validate,date,deathIncrease_real=deathIncrease)
 comp_validation=comp_validation %>% left_join(predictions_validation,by=c("date"="date"))
 #- Side by side results
-ggplot()+geom_line(aes(x=comp_validation$date,y=comp_validation$deathincrease_model,color="model"))+
-  geom_line(aes(x=comp_validation$date,y=comp_validation$deathIncrease_real,color="real"))
+ggplot()+geom_line(aes(x=comp_validation$date,y=comp_validation$deathincrease_model,color="model"),size=1.5)+
+  geom_line(aes(x=comp_validation$date,y=comp_validation$deathIncrease_real,color="real"),size=1.5)+
+  labs(title="Validação",x="Data", y = "Numero de mortes")
 
 #- Absolute Error
 ggplot()+geom_line(aes(x=comp_validation$date,y=abs(comp_validation$deathincrease_model-comp_validation$deathIncrease_real),color="model"))
@@ -91,11 +95,17 @@ mean(abs(comp_validation$deathincrease_model-comp_validation$deathIncrease_real)
 print("RMSE VAlidation")
 RMSE(comp_validation$deathIncrease_real,comp_validation$deathincrease_model, na.rm = T)
 #R2
-ggplot()+geom_line(aes(x=comp_validation$deathIncrease_real,y=comp_validation$deathIncrease_real,color="real"))+
-  geom_point(aes(x=comp_validation$deathIncrease_real,y=comp_validation$deathincrease_model,color="model"))
+ggplot()+geom_line(aes(x=comp_validation$deathIncrease_real,y=comp_validation$deathIncrease_real,color="real"),size=1.5)+
+  geom_point(aes(x=comp_validation$deathIncrease_real,y=comp_validation$deathincrease_model,color="model"),size=2.5)+
+  labs(title=paste("R2=",R2(comp_validation$deathIncrease_real,comp_validation$deathincrease_model, na.rm = T)),x="", y = "")
 
 print("R^2 Validation")
 R2(comp_validation$deathIncrease_real,comp_validation$deathincrease_model, na.rm = T)
+
+#Distribution Error
+hist(comp_validation$deathIncrease_real-comp_validation$deathincrease_model, na.rm = T)
+sd(comp_validation$deathIncrease_real-comp_validation$deathincrease_model, na.rm = T)
+
 #------------------------All data put together-----------------------------------
 ggplot()+geom_line(aes(x=comp_validation$date,y=comp_validation$deathincrease_model,color="model"),size=1.5)+
   geom_line(aes(x=comp_validation$date,y=comp_validation$deathIncrease_real,color="real"),size=1.5)+
